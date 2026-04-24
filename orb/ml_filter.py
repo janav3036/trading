@@ -1,14 +1,19 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 
 from shared.data import fetch_all
-from .strategy import run_strategy
-from .backtest import run_backtest, performance_report
-from .features import build_feature_matrix
+from orb.strategy import run_strategy
+from orb.backtest import run_backtest, performance_report
+from orb.features import build_feature_matrix
+from orb.config import TIME_EXIT_CUTOFF
+
+OUTPUT_DIR = Path(__file__).parent / "outputs"
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 FEATURE_COLS = [
     "range_size_pct",
@@ -27,7 +32,6 @@ FEATURE_COLS = [
 
 ]
 
-TIME_EXIT_CUTOFF = 14
 
 def time_split(feature_df: pd.DataFrame, train_ratio: float = 0.8):
     """
@@ -167,12 +171,15 @@ def filtered_backtest(test_df : pd.DataFrame, trades: pd.DataFrame, signals: pd.
     lift = filtered_exp - unfiltered_exp
     print(f"  Expectancy lift  : ₹{lift:+.2f} per trade")
     print("=" * 45)
- 
+
+    filtered_trades.to_csv(OUTPUT_DIR/"ml_filtered_trades.csv", index=False)
+    print("Full trade log saved to ml_filtered_trades.csv")
+
  
 if __name__ == "__main__":
     # ── Step 1: Load data and run base strategy + backtest ───────────────────
     print("Fetching data...")
-    data = fetch_all()
+    data = fetch_all(interval="1h")
  
     print("Running strategy...")
     signals = run_strategy(data)

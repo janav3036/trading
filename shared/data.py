@@ -7,7 +7,7 @@ DATA_DIR = Path(__file__).parent.parent/"data"
 DATA_DIR.mkdir(exist_ok=True)
 
 def fetch_historical(ticker: str, interval: str="1h") -> pd.DataFrame: #for 1 singular ticker
-    cache_path = DATA_DIR / f"{ticker.replace('.', '_')}.parquet"
+    cache_path = DATA_DIR / f"{interval}/{ticker.replace('.', '_')}.parquet"
     if cache_path.exists():
         print(f"Loading {ticker} from cache...")
         df = pd.read_parquet(cache_path)
@@ -41,7 +41,7 @@ def fetch_historical(ticker: str, interval: str="1h") -> pd.DataFrame: #for 1 si
 
 def fetch_nifty(interval: str = "1h") -> pd.DataFrame: #for NIFTY
     ticker = "^NSEI"  # Nifty 50 ticker
-    cache_path = DATA_DIR / f"{ticker.replace('^', '')}.parquet"
+    cache_path = DATA_DIR / f"{interval}/{ticker.replace('^', '')}.parquet"
     if cache_path.exists():
         print(f"Loading {ticker} from cache...")
         df = pd.read_parquet(cache_path)

@@ -2,9 +2,9 @@ import yfinance as yf
 import pandas as pd
 import pytz
 import time
-from config import WATCHLIST, CAPITAL_PER_TRADE, BROKERAGE_PER_ORDER, STT_RATE, EXCHANGE_RATE, SEBI_RATE, STAMP_RATE, GST_RATE
+from shared.config import WATCHLIST, CAPITAL_PER_TRADE, BROKERAGE_PER_ORDER, STT_RATE, EXCHANGE_RATE, SEBI_RATE, STAMP_RATE, GST_RATE
 from datetime import datetime
-from strategy import get_signal
+from orb.strategy import get_signal
 IST = pytz.timezone("Asia/Kolkata")
 TIME_EXIT_HOUR = 14
 TIME_EXIT_MINUTE = 30

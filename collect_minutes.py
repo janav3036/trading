@@ -2,20 +2,20 @@ import pandas as pd
 import yfinance as yf
 from datetime import date, timedelta
 from pathlib import Path
-from config import WATCHLIST
+from shared.config import WATCHLIST
 
-DATA_DIR = Path("data_1m")
+DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 
-def retrieve_minutes(ticker: str) -> pd.DataFrame:
-    cache_path = DATA_DIR / f"{ticker.replace('.', '_')}.parquet"
+def retrieve_minutes(ticker: str, interval: str = "1m") -> pd.DataFrame:
+    cache_path = DATA_DIR / f"{interval}/{ticker.replace('.', '_')}.parquet"
     existing_path = pd.read_parquet(cache_path) if cache_path.exists() else None
     print(f"Fetching data for {ticker}")
 
     df = yf.download(
         tickers = ticker,
         period = "7d",
-        interval = "1m", 
+        interval = interval, 
         auto_adjust = True,
         progress = False
     )

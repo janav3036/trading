@@ -3,7 +3,7 @@ import numpy as np
 from shared.config import CAPITAL_PER_TRADE, BROKERAGE_PER_ORDER, STT_RATE, EXCHANGE_RATE, SEBI_RATE, STAMP_RATE, GST_RATE
 from shared.data import fetch_all
 from orb.strategy import run_strategy
-from orb.config import TIME_EXIT_HOUR
+from orb.config import TIME_EXIT_CUTOFF
 from pathlib import Path
 
 OUTPUT_DIR = Path(__file__).parent / "outputs"
@@ -24,7 +24,7 @@ def calculate_costs(entry_price:float, exit_price:float, shares:float, signal:st
 
     return brokerage+stt+exchange+sebi+stamp+gst
 
-def simulate_trade(signal_row:pd.Series, day_data:pd.DataFrame, time_exit_hour: int = TIME_EXIT_HOUR) -> dict:
+def simulate_trade(signal_row:pd.Series, day_data:pd.DataFrame, time_exit_hour: int = TIME_EXIT_CUTOFF) -> dict:
     signal = signal_row['signal']
     entry = signal_row['entry']
     stop = signal_row['stop_loss']
@@ -84,7 +84,7 @@ def simulate_trade(signal_row:pd.Series, day_data:pd.DataFrame, time_exit_hour: 
     }
 
 def run_backtest(signals: pd.DataFrame, data: dict,
-                 time_exit_hour: int = TIME_EXIT_HOUR) -> pd.DataFrame:
+                 time_exit_hour: int = TIME_EXIT_CUTOFF) -> pd.DataFrame:
     results = []
  
     for _, row in signals.iterrows():
